@@ -1,0 +1,100 @@
+[package]
+name = "aln-dev-tools"
+version = "1.0.0"
+edition = "2021"
+authors = ["ALN Sovereign Stack Contributors"]
+description = "Developer tooling for ALN syntax creation, testing, linting, and debugging"
+license = "MIT"
+repository = "https://github.com/aln-sovereign/aln-dev-tools"
+documentation = "https://docs.rs/aln-dev-tools"
+keywords = ["aln", "developer-tools", "linting", "ide", "security"]
+categories = ["development-tools", "command-line-utilities"]
+
+[dependencies]
+aln-syntax-core = { version = "1.0", path = "../aln-syntax-core" }
+sovereigntycore = { version = "1.0", path = "../sovereigntycore" }
+zes-crypto-lib = { version = "1.0", path = "../zes-crypto-lib" }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+thiserror = "1.0"
+hex = "0.4"
+sha3 = "0.10"
+chrono = { version = "0.4", features = ["serde"] }
+uuid = { version = "1.0", features = ["v4", "serde"] }
+log = "0.4"
+env_logger = "0.10"
+clap = { version = "4.0", features = ["derive"] }
+colored = "2.0"
+serde_yaml = "0.9"
+toml = "0.8"
+regex = "1.0"
+walkdir = "2.0"
+notify = "6.0"
+tokio = { version = "1.0", features = ["full"] }
+reqwest = { version = "0.11", features = ["json"] }
+tower-lsp = "0.20"
+
+[dev-dependencies]
+criterion = "0.5"
+proptest = "1.0"
+tempfile = "3.0"
+serial_test = "2.0"
+tokio-test = "0.4"
+
+[lib]
+name = "aln_dev_tools"
+path = "src/lib.rs"
+crate-type = ["cdylib", "rlib"]
+
+[[bin]]
+name = "aln-lint"
+path = "src/bin/lint.rs"
+
+[[bin]]
+name = "aln-verify"
+path = "src/bin/verify.rs"
+
+[[bin]]
+name = "aln-debug"
+path = "src/bin/debug.rs"
+
+[[bin]]
+name = "aln-gen"
+path = "src/bin/generate.rs"
+
+[[bin]]
+name = "aln-cap-check"
+path = "src/bin/capability_check.rs"
+
+[[bench]]
+name = "lint_performance"
+harness = false
+
+[features]
+default = ["std", "full-ide-support"]
+std = []
+full-ide-support = ["tower-lsp", "tokio"]
+offline-mode = []
+ci-integration = []
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = true
+
+[profile.dev]
+opt-level = 0
+debug = true
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
+[package.metadata.vscode]
+extension-name = "aln-dev-tools"
+extension-version = "1.0.0"
+
+[lints.clippy]
+all = "deny"
+pedantic = "warn"
+unsafe_code = "deny"
